@@ -9,21 +9,18 @@ const mainContainer = document.getElementById("mainContainer");
 const successMessage = document.getElementById("successMessage");
 
 let yesScale = 1;
+let noScale = 1;
 
-// Logic to move the NO btn and grow YES btn
-noBtn.addEventListener("mouseover", () => {
-    // Move NO button
-    const min = 200;
-    const max = 200;
-    const distance = Math.random() * (max - min) + min;
-    const angle = Math.random() * Math.PI * 2;
-    const moveX = Math.cos(angle) * distance;
-    const moveY = Math.sin(angle) * distance;
+// Logic to shrink NO btn and grow YES btn on click
+noBtn.addEventListener("click", () => {
+    // Shrink NO button
+    noScale -= 0.15;
+    if (noScale < 0.1) noScale = 0.1; // Don't let it disappear completely
     noBtn.style.transition = "transform 0.3s ease";
-    noBtn.style.transform = `translate(${moveX}px, ${moveY}px)`;
+    noBtn.style.transform = `scale(${noScale})`;
     
     // Grow YES button
-    yesScale += 0.2;
+    yesScale += 0.3;
     yesBtn.style.transition = "transform 0.3s ease";
     yesBtn.style.transform = `scale(${yesScale})`;
 });
@@ -58,7 +55,7 @@ function init() {
   stage.addChild(container);
 
   // Create hearts
-  for (var i = 0; i < 20; i++) {
+  for (var i = 0; i < 30; i++) {
     var heart = new createjs.Shape();
     heart.graphics.beginFill("#ded162");
     heart.graphics.moveTo(0, -12).curveTo(1, -20, 8, -20).curveTo(16, -20, 16, -10).curveTo(16, 0, 0, 12);
@@ -72,7 +69,7 @@ function init() {
     heart.velY = -Math.random() * 2 - 1;
     heart.scale = Math.random() * 1 + 0.3;
     heart._rotation = Math.random() * 40 - 20;
-    heart.alpha = 1; // Same opacity for all hearts
+    heart.alpha = 1;
 
     container.addChild(heart);
   }
@@ -94,7 +91,6 @@ function tick(event) {
   for (var i = 0; i < l; i++) {
     var heart = container.getChildAt(i);
     
-    // Reset heart when it goes off screen
     if (heart.y < -50) {
       heart._x = Math.random() * w;
       heart.y = h + 50;

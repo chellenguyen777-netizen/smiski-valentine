@@ -48,7 +48,6 @@ body, html {
     margin: 0 auto;
 }
 
-
 .text-overlay {
     position: absolute;
     top: 50%;
@@ -120,100 +119,73 @@ body, html {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 2; /* Above hearts, below window tab */
-    pointer-events: none; /* So stickers don't block clicks */
+    z-index: 2;
+    pointer-events: none;
+    overflow: hidden;
 }
 
 .floating-sticker {
     position: absolute;
-    width: 120px;
-    height: auto;
-    animation: float 3s ease-in-out infinite, shake 2s ease-in-out infinite;
+    width: 170px;
+    height: 170px;
+    object-fit: contain;
+    /* Using a consistent duration makes spacing easier to manage */
+    animation: rain 12s linear infinite; 
+    /* Start all stickers off-screen at the same point */
+    top: -200px; 
 }
 
-/* Spread out with different transforms and delays */
-.sticker-1 {
-    top: 8%;
-    left: 5%;
-    animation-delay: 0s;
-    transform: rotate(-5deg);
+/* Column 1 - Left (5%) */
+.sticker-1 { left: 5%;  animation-delay: 0s; }
+.sticker-2 { left: 5%;  animation-delay: 4s; }
+.sticker-3 { left: 5%;  animation-delay: 8s; }
+
+/* Column 2 - Center Left (30%) */
+.sticker-4 { left: 30%; animation-delay: 2s; }
+.sticker-5 { left: 30%; animation-delay: 6s; }
+.sticker-6 { left: 30%; animation-delay: 10s; }
+
+/* Column 3 - Center Right (70%) */
+.sticker-7 { left: 70%; animation-delay: 1s; }
+.sticker-8 { left: 70%; animation-delay: 5s; }
+.sticker-9 { left: 70%; animation-delay: 9s; }
+
+/* Column 4 - Right (90%) */
+.sticker-10 { left: 90%; animation-delay: 3s; }
+.sticker-11 { left: 90%; animation-delay: 7s; }
+.sticker-12 { left: 90%; animation-delay: 11s; }
+
+/* Mobile - 4 columns */
+@media (max-width: 768px) {
+    .floating-sticker {
+        width: 150px;
+        height: 150px;
+        object-fit: contain;
+        animation-duration: 8s;
+    }
+    
+    .sticker-1 { left: 5%; }
+    .sticker-2 { left: 5%; }
+    .sticker-3 { left: 5%; }
+    .sticker-4 { left: 30%; }
+    .sticker-5 { left: 30%; }
+    .sticker-6 { left: 30%; }
+    .sticker-7 { left: 70%; }
+    .sticker-8 { left: 70%; }
+    .sticker-9 { left: 70%; }
+    .sticker-10 { left: 95%; }
+    .sticker-11 { left: 95%; }
+    .sticker-12 { left: 95%; }
 }
 
-.sticker-2 {
-    top: 5%;
-    right: 8%;
-    animation-delay: 0.5s;
-    transform: rotate(8deg);
-}
-
-.sticker-3 {
-    bottom: 12%;
-    left: 8%;
-    animation-delay: 1s;
-    transform: rotate(3deg);
-}
-
-.sticker-4 {
-    bottom: 15%;
-    right: 10%;
-    animation-delay: 1.5s;
-    transform: rotate(-7deg);
-}
-
-.sticker-5 {
-    top: 50%;
-    left: 2%;
-    animation-delay: 2s;
-    transform: rotate(12deg);
-}
-
-.sticker-6 {
-    top: 50%;
-    right: 2%;
-    animation-delay: 2.5s;
-    transform: rotate(-10deg);
-}
-
-.sticker-7 {
-    top: 25%;
-    left: 18%; /* Pushed more to the right */
-    animation-delay: 3s;
-    transform: rotate(5deg);
-}
-
-.sticker-8 {
-    top: 28%;
-    right: 20%; /* Pushed more to the left */
-    animation-delay: 0.3s;
-    transform: rotate(-12deg);
-}
-
-.sticker-9 {
-    bottom: 30%;
-    left: 20%; /* Pushed more to the right */
-    animation-delay: 0.8s;
-    transform: rotate(7deg);
-}
-
-.sticker-10 {
-    bottom: 38%; /* Changed vertical position */
-    right: 8%;
-    animation-delay: 1.3s;
-    transform: rotate(-4deg);
-}
-
-.sticker-11 {
-    top: 65%;
-    left: 15%; /* Pushed more to the right */
-    animation-delay: 1.8s;
-    transform: rotate(9deg);
-}
-
-.sticker-12 {
-    top: 68%; /* Changed vertical position */
-    right: 18%; /* Pushed more to the left */
-    animation-delay: 2.3s;
-    transform: rotate(-6deg);
+/* Rain animation - NO SPINNING */
+@keyframes rain {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(calc(100vh + 400px));
+    }
 }
 
 .success-message {
@@ -221,34 +193,55 @@ body, html {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0);
+    /* Added Flexbox to stack items vertically */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     z-index: 10;
     opacity: 0;
     transition: all 0.5s ease;
 }
 
-.success-message.show {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
+.success-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    
+    /* Flexbox setup */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    z-index: 10;
+    opacity: 0;
+    transition: all 0.5s ease;
+}
+
+.success-character {
+    width: 220px; /* Slightly larger if you like */
+    height: auto;
+    /* Remove any bottom margin that might be pushing the text away */
+    margin-top: -30px; 
+    animation: bounce 2s infinite ease-in-out;
 }
 
 .success-message p {
     font-size: 32px;
-    color: white; /* Changed from #333 so it shows on green background */
-    margin-top: 20px;
+    color: #00a043;
     font-weight: bold;
+    /* Reduced margin-top to bring it closer to the image */
+    margin-bottom: -10px; 
+    line-height: 1.2;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
-@media (min-width: 320px) and (max-width: 430px) {
-    .image-wrapper {
-        max-width: 350px;
-    }
-}
-
-@media (max-width: 768px) {
-    .floating-sticker {
-        width: 80px;
-    }
+.success-message.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
 }
 
 @keyframes bounce {
@@ -260,44 +253,6 @@ body, html {
     }
 }
 
-/* Mobile - adjust positions to prevent overlap */
-@media (max-width: 768px) {
-    .sticker-1 { top: 5%; left: 2%; }
-    .sticker-2 { top: 3%; right: 2%; }
-    .sticker-3 { bottom: 8%; left: 2%; }
-    .sticker-4 { bottom: 10%; right: 2%; }
-    .sticker-5 { top: 40%; left: 1%; }
-    .sticker-6 { top: 40%; right: 1%; }
-    .sticker-7 { top: 18%; left: 8%; }
-    .sticker-8 { top: 20%; right: 10%; }
-    .sticker-9 { bottom: 22%; left: 10%; }
-    .sticker-10 { bottom: 30%; right: 8%; }
-    .sticker-11 { top: 65%; left: 5%; }
-    .sticker-12 { top: 70%; right: 8%; }
-}
-/* Floating animation */
-@keyframes float {
-    0%, 100% {
-        transform: translateY(0px);
-    }
-    50% {
-        transform: translateY(-20px);
-    }
-}
-
-/* Shaking animation */
-@keyframes shake {
-    0%, 100% {
-        transform: rotate(0deg);
-    }
-    25% {
-        transform: rotate(-5deg);
-    }
-    75% {
-        transform: rotate(5deg);
-    }
-}
-
 /* Fade out animation for main container */
 .image-wrapper.fade-out {
     opacity: 0;
@@ -305,8 +260,33 @@ body, html {
     transition: all 0.5s ease;
 }
 
+.scooter-lane {
+    position: fixed;
+    bottom: 0px; /* Distance from the bottom */
+    left: 0;
+    width: 100%;
+    height: 200px; /* Adjust based on scooter size */
+    z-index: 3; /* Above the falling stickers */
+    pointer-events: none;
+    overflow: hidden;
+}
 
+.scooter {
+    position: absolute;
+    width: 200px; /* Adjust size as needed */
+    bottom: 0px;
+    /* Starts completely off-screen to the left */
+    left: -150px; 
+    animation: drive 7s linear infinite;
+}
 
-
-
+@keyframes drive {
+    0% {
+        left: -150px;
+    }
+    100% {
+        /* Moves all the way across the screen */
+        left: 100%; 
+    }
+}
 
